@@ -2,12 +2,12 @@
 
 ## Name
 
-*nxdomain* - shortcut domain name by returning NXDOMAIN directly
+*nxdomain* - shortcut domain resolution by returning NXDOMAIN directly.
 
 ## Description
 
-*nxdomain* takes a list of domain and immediately return NXDOMAIN for any name in them
-instead of taking the long road of trying to resolve them.
+*nxdomain* takes a list of domains and immediately returns NXDOMAIN for any name under them instead
+ of taking the long road of trying to resolve them.
 
 ## Syntax
 
