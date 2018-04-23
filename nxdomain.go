@@ -6,7 +6,6 @@ import (
 
 	"github.com/coredns/coredns/core/dnsserver"
 	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/request"
 
 	"github.com/mholt/caddy"
 	"github.com/miekg/dns"
@@ -47,11 +46,8 @@ func setup(c *caddy.Controller) error {
 
 // ServeDNS implements the plugin.Handler interface.
 func (n N) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int, error) {
-
-	state := request.Request{W: w, Req: r}
-
 	for _, n := range n.names {
-		if dns.IsSubDomain(n, state.Name()) {
+		if dns.IsSubDomain(n, r.Question[0].Name) {
 			m := new(dns.Msg)
 			m.SetRcode(r, dns.RcodeNameError)
 			m.Ns = []dns.RR{soa(n)}
@@ -59,7 +55,6 @@ func (n N) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int,
 			return 0, nil
 		}
 	}
-
 	return plugin.NextOrFailure(n.Name(), n.Next, ctx, w, r)
 }
 
