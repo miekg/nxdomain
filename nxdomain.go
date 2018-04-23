@@ -12,8 +12,8 @@ import (
 	"github.com/miekg/dns"
 )
 
-// Nxdomain implement the plugin interface.
-type Nxdomain struct {
+// N implement the plugin interface.
+type N struct {
 	Next  plugin.Handler
 	names []string
 }
@@ -32,21 +32,21 @@ func setup(c *caddy.Controller) error {
 		if len(args) == 0 {
 			return plugin.Error("nxdomain", c.ArgErr())
 		}
-		// I'll bet these are not fully qualified
+		// I'll bet these are not fully qualified.
 		for _, a := range args {
 			names = append(names, dns.Fqdn(a))
 		}
 	}
 
 	dnsserver.GetConfig(c).AddPlugin(func(next plugin.Handler) plugin.Handler {
-		return Nxdomain{Next: next, names: names}
+		return N{Next: next, names: names}
 	})
 
 	return nil
 }
 
 // ServeDNS implements the plugin.Handler interface.
-func (n Nxdomain) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int, error) {
+func (n N) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int, error) {
 
 	state := request.Request{W: w, Req: r}
 
@@ -64,7 +64,7 @@ func (n Nxdomain) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 }
 
 // Name implements the Handler interface.
-func (n Nxdomain) Name() string { return "nxdomain" }
+func (n N) Name() string { return "nxdomain" }
 
 func soa(name string) dns.RR {
 	s := fmt.Sprintf("%s 60 IN SOA ns1.%s postmaster.%s 1524370381 14400 3600 604800 60", name, name, name)
