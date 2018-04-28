@@ -11,7 +11,7 @@ import (
 	"github.com/miekg/dns"
 )
 
-// N implement the plugin interface.
+// N implements the plugin interface.
 type N struct {
 	Next  plugin.Handler
 	names []string
