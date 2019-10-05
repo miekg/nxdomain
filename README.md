@@ -12,7 +12,7 @@
 ## Syntax
 
 ~~~ txt
-nxdomain DOMAIN [DOMAIN]...
+nxdomain [ZONE]...
 ~~~
 
 ## Examples
@@ -20,8 +20,8 @@ nxdomain DOMAIN [DOMAIN]...
 NXDOMAIN everything in the `.com` zone:
 
 ~~~ corefile
-. {
-    nxdomain com
+com {
+    nxdomain
     whoami
 }
 ~~~
@@ -30,7 +30,12 @@ NXDOMAIN *everything* (might be a bad idea):
 
 ~~~ corefile
 . {
-    nxdomain .
+    nxdomain
     whoami
 }
 ~~~
+
+# Bugs
+
+The list of zones is just a slice that is traversed, meaning this plugin will get slow when a lof of
+names are to be shortcut.

@@ -7,7 +7,7 @@ import (
 	"github.com/coredns/coredns/core/dnsserver"
 	"github.com/coredns/coredns/plugin"
 
-	"github.com/mholt/caddy"
+	"github.com/caddyserver/caddy"
 	"github.com/miekg/dns"
 )
 
@@ -17,19 +17,16 @@ type N struct {
 	names []string
 }
 
-func init() {
-	caddy.RegisterPlugin("nxdomain", caddy.Plugin{
-		ServerType: "dns",
-		Action:     setup,
-	})
-}
+func init() { plugin.Register("nxdomain", setup) }
 
 func setup(c *caddy.Controller) error {
 	names := []string{}
 	for c.Next() {
 		args := c.RemainingArgs()
 		if len(args) == 0 {
-			return plugin.Error("nxdomain", c.ArgErr())
+			origins := make([]string, len(c.ServerBlockKeys))
+			copy(names, c.ServerBlockKeys)
+			continue
 		}
 		// I'll bet these are not fully qualified.
 		for _, a := range args {

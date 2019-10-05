@@ -3,7 +3,7 @@ package dump
 import (
 	"testing"
 
-	"github.com/mholt/caddy"
+	"github.com/caddyserver/caddy"
 )
 
 func TestSetup(t *testing.T) {
@@ -14,10 +14,7 @@ func TestSetup(t *testing.T) {
 		// positive
 		{
 			`nxdomain com`, false,
-		},
-		// negative
-		{
-			`nxdomain`, true,
+			`nxdomain`, false,
 		},
 	}
 
